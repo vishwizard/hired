@@ -2,7 +2,7 @@ import { Inngest } from "inngest";
 import User from "../models/User.js";
 import { connectDB } from "./db.js";
 
-export const inngest = Inngest({id:"hireorfire"});
+export const inngest = new Inngest({id:"hireorfire"});
 
 const syncUser = inngest.createFunction(
     {id:"create-user"},
@@ -11,12 +11,12 @@ const syncUser = inngest.createFunction(
         await connectDB();
 
         const {id, email_addresses, first_name, last_name, image_url} = event.data;
-        const user = {
+        const user = new User({
             clerkId:id,
             name:`${first_name || ""} ${last_name || ""}`,
             email:email_addresses[0]?.email_address,
             profileImage:image_url,
-        }
+        });
 
         await User.save(user);
     }
@@ -30,8 +30,8 @@ const deleteUserFromDB = inngest.createFunction(
 
         const {id} = event.data;
 
-        await User.delete({clerkId:id});
+        await User.deleteOne({clerkId:id});
     }
 );
 
-export const functions = {syncUser, deleteUserFromDB};
+export const functions = [syncUser, deleteUserFromDB];

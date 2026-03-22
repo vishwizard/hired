@@ -3,7 +3,7 @@ import { ENV } from './config/env.js';
 import path from "path";
 import cors from "cors";
 import { connectDB } from './config/db.js';
-import serve from 'inngest/express';
+import {serve} from 'inngest/express';
 import { inngest, functions } from './config/inngest.js';
 
 
