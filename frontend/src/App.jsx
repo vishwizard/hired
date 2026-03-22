@@ -1,4 +1,3 @@
-import './App.css'
 import { SignInButton } from '@clerk/react'
 
 function App() {
