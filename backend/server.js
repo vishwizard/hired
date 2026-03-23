@@ -1,6 +1,7 @@
 import express from 'express';
 import { ENV } from './config/env.js';
 import path from "path";
+import { clerkMiddleware } from '@clerk/express';
 import cors from "cors";
 import { connectDB } from './config/db.js';
 import {serve} from 'inngest/express';
@@ -9,14 +10,15 @@ import { inngest, functions } from './config/inngest.js';
 
 const app = express();
 app.use(express.json());
-app.use("/api/inngest", serve({client: inngest, functions}));
-const __dirname = path.resolve();
-
-//credentials = true says server allows browser to include cookies
 app.use(cors({
     origin:ENV.CLIENT_URL,
     credentials:true
 }));
+app.use(clerkMiddleware());
+app.use("/api/inngest", serve({client: inngest, functions}));
+const __dirname = path.resolve();
+
+//credentials = true says server allows browser to include cookies
 
 
 console.log(ENV.PORT);
