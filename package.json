@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/vishwizard/hired/issues"
   },
-  "homepage": "https://github.com/vishwizard/hired#readme"
+  "homepage": "https://github.com/vishwizard/hired#readme",
+  "dependencies": {
+    "@stream-io/node-sdk": "^0.7.12"
+  }
 }
