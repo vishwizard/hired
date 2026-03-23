@@ -8,6 +8,8 @@ import { inngest, functions } from './config/inngest.js';
 
 
 const app = express();
+app.use(express.json());
+app.use("/api/inngest", serve({client: inngest, functions}));
 const __dirname = path.resolve();
 
 //credentials = true says server allows browser to include cookies
@@ -16,7 +18,6 @@ app.use(cors({
     credentials:true
 }));
 
-app.use("/api/inngest", serve({client: inngest, functions}))
 
 console.log(ENV.PORT);
 
