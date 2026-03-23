@@ -3,40 +3,45 @@ import User from "../models/User.js";
 import { connectDB } from "./db.js";
 import { deleteStreamUser, upsertStreamUser } from "./stream.js";
 
-export const inngest = new Inngest({id:"hireorfire"});
+export const inngest = new Inngest({ id: "hireorfire" });
 
 const syncUser = inngest.createFunction(
-    {id:"create-user"},
-    {event: "clerk/user.created"},
-    async ({event})=>{
+    { id: "sync-user-from-clerk" }, 
+    { events: ["clerk/user.created", "clerk/user.updated"] },
+    async ({ event }) => {
         await connectDB();
 
-        const {id, email_addresses, first_name, last_name, image_url} = event.data;
-        const user = new User({
-            clerkId:id,
-            name:`${first_name || ""} ${last_name || ""}`,
-            email:email_addresses[0]?.email_address,
-            profileImage:image_url,
-        });
+        const { id, email_addresses, first_name, last_name, image_url } = event.data;
+        const fullName = `${first_name || ""} ${last_name || ""}`.trim();
+        const email = email_addresses[0]?.email_address;
 
-        await User.save(user);
+        await User.findOneAndUpdate(
+            { clerkId: id },
+            {
+                clerkId: id,
+                name: fullName,
+                email: email,
+                profileImage: image_url,
+            },
+            { upsert: true, new: true }
+        );
+
         await upsertStreamUser({
-            id:user.clerkId.toString(),
-            name:user.name,
-            image:user.profileImage
+            id: id.toString(),
+            name: fullName,
+            image: image_url
         });
     }
 );
 
 const deleteUserFromDB = inngest.createFunction(
-    {id:"delete-user"},
-    {event: "clerk/user.deleted"},
-    async ({event})=>{
+    { id: "delete-user" },
+    { event: "clerk/user.deleted" },
+    async ({ event }) => {
         await connectDB();
+        const { id } = event.data;
 
-        const {id} = event.data;
-
-        await User.deleteOne({clerkId:id});
+        await User.deleteOne({ clerkId: id });
         await deleteStreamUser(id.toString());
     }
 );
