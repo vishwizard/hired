@@ -8,22 +8,28 @@ export const inngest = new Inngest({id:"hireorfire"});
 const syncUser = inngest.createFunction(
     {id:"create-user"},
     {event: "clerk/user.created"},
-    async ({event})=>{
+    async ({ event }) => {
         await connectDB();
 
-        const {id, email_addresses, first_name, last_name, image_url} = event.data;
-        const user = new User({
-            clerkId:id,
-            name:`${first_name || ""} ${last_name || ""}`,
-            email:email_addresses[0]?.email_address,
-            profileImage:image_url,
-        });
+        const { id, email_addresses, first_name, last_name, image_url } = event.data;
+        const fullName = `${first_name || ""} ${last_name || ""}`.trim();
+        const email = email_addresses[0]?.email_address;
 
-        await User.save(user);
+        await User.findOneAndUpdate(
+            { clerkId: id },
+            {
+                clerkId: id,
+                name: fullName,
+                email: email,
+                profileImage: image_url,
+            },
+            { upsert: true, new: true }
+        );
+
         await upsertStreamUser({
-            id:user.clerkId.toString(),
-            name:user.name,
-            image:user.profileImage
+            id: id.toString(),
+            name: fullName,
+            image: image_url
         });
     }
 );
