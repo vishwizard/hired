@@ -1,11 +1,21 @@
-import { SignInButton } from '@clerk/react'
+import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/react'
+
+
 
 function App() {
 
   return (
     <>
-      <h1>Welcome to sign in page</h1>
-      <SignInButton mode="modal"/>
+      <h1>My App</h1>
+      
+      <Show when="signed-out">
+          <SignInButton />
+          <span className='mt-10'>Empty Space</span>
+          <SignUpButton />
+        </Show>
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
     </>
   )
 }
