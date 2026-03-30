@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getStreamToken } from "../controllers/chatControllers";
-import { protectRoute } from "../utils/protectRoute";
+import { getStreamToken } from "../controllers/chatControllers.js";
+import { protectRoute } from "../utils/protectRoute.js";
 
 const router = Router();
 

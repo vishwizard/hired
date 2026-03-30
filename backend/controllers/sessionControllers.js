@@ -1,4 +1,4 @@
-import { chatClient, streamClient } from '../config/stream';
+import { chatClient, streamClient } from '../config/stream.js';
 import Session from '../models/Session.js';
 
 export async function createSession(req, res){
