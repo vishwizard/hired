@@ -2,17 +2,18 @@ import { Navigate, Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ProblemsPage from './pages/ProblemsPage.jsx'
+import DashboardPage from './pages/DashboardPage.jsx'
 import { Toaster } from 'react-hot-toast';
+import { useUser } from '@clerk/react';
 
 function App() {
-  const {isSignedIn} = useUser();
+  const {isSignedIn, isLoaded} = useUser();
+  if(!isLoaded) return null;
   return (
     <>
-      <h1 className='bg-red-500 text-4xl'> My App</h1>
-      <button className='btn btn-primary'>Hit me Daddy</button>
-      
       <Routes>
-        <Route path='/' element={<HomePage/>}> </Route>
+        <Route path="/" element={ !isSignedIn ? <HomePage/> : <Navigate to={"/dashboard"}/>}> </Route>
+        <Route path="/dashboard" element={ isSignedIn ? <DashboardPage/> : <Navigate to={"/"}/>}> </Route>
         <Route path='/about' element={<AboutPage/>}> </Route>
         <Route path='/problems' element={isSignedIn ? <ProblemsPage/> : <Navigate to={"/"}/>}></Route>
       </Routes>
