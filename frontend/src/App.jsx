@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ProblemsPage from './pages/ProblemsPage.jsx'
+import ProblemPage from './pages/ProblemPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import { Toaster } from 'react-hot-toast';
 import { useUser } from '@clerk/react';
@@ -16,6 +17,7 @@ function App() {
         <Route path="/dashboard" element={ isSignedIn ? <DashboardPage/> : <Navigate to={"/"}/>}> </Route>
         <Route path='/about' element={<AboutPage/>}> </Route>
         <Route path='/problems' element={isSignedIn ? <ProblemsPage/> : <Navigate to={"/"}/>}></Route>
+        <Route path='/problem/:id' element={isSignedIn ? <ProblemPage/> : <Navigate to={"/"}/>}></Route>
       </Routes>
       <Toaster toastOptions={{duration:3000}}/>
     </>

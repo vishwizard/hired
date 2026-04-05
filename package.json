@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/vishwizard/hired#readme",
   "dependencies": {
-    "@stream-io/node-sdk": "^0.7.12"
+    "@stream-io/node-sdk": "^0.7.12",
+    "canvas-confetti": "^1.9.4"
   }
 }
