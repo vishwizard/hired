@@ -27,7 +27,7 @@ const ProblemsPage = () => {
         <div className="space-y-4">
           {problems.map((problem)=>(
             <Link key={problem.id}
-              to={`/problems/${problem.id}`}
+              to={`/problem/${problem.id}`}
               className='card bg-base-100 hover:scale-[1.01] transition-transform'
             >
               <div className="card-body">
